@@ -126,7 +126,7 @@
         - How long it has been running.
         - Its current state (e.g., running, waiting, suspended).
 
-  !(cpu.png)[cpu.png]
+  !(cpu.png)[CPU.png]
 
   
 Homework:
