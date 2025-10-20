@@ -47,10 +47,12 @@
 **1. Example Setup**
 
 - Virtual address space: **64 bytes**, divided into **4 pages** (16 bytes each).
+
 ![alt](chapter-18-01.png)
 - Physical memory: **128 bytes**, divided into **8 page frames**.
     
 - Each virtual page can be placed in any physical frame.
+
 ![alt](chapter-18-02.png)
 
 **2. Advantages of Paging**
@@ -97,6 +99,7 @@
 **5. Example Translation**
 
 - Virtual address = **21 (binary 010101)**
+
 ![alt](chapter-18-04.png)
     - VPN = `01` → Virtual Page 1
         
@@ -105,6 +108,7 @@
 - From page table: VP1 → PF7 (`111` in binary).
     
 - Replace VPN with PFN → Physical address = `1110101` (decimal 117).
+
 ![alt](chapter-18-05.png)
 - Offset remains unchanged.
     
