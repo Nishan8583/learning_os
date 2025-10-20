@@ -24,4 +24,6 @@ Each **PTE** holds information about a page and its status:
 |**Reference bit (A)**|Tracks if the page has been **recently accessed** — used in **page replacement** algorithms.|
 |**User/Supervisor bit (U/S)**|Determines whether **user-mode** or **kernel-mode** can access the page.|
 |**Cache control bits (PWT, PCD, PAT, G)**|Manage caching behavior at the hardware level.|
+
+
 ![alt](chapter-18-06.png)
