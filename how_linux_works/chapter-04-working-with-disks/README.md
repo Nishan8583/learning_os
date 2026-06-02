@@ -18,3 +18,14 @@
 - It has not created any Filesystem yet, so we need to create it.
 - `sudo mkfs.vfat -F 32 /dev/sdb1` or `sudo mkfs.fat -F 32 /dev/sdb1` it creates FAT32 FileSytem on `/dev/sdb1`, choose the one we just paritioned.
 
+### Filesystem
+- Make new FS ext4 in a newly partitioned disk (don't care about the data because making a new FS will practically make old data useless) `mkfs.ext4 /dev/sdb1`.
+- `mkfs -t ext4 /dev/sdf2`.
+- Mount the filesystem `mount /dev/sdf2 /home/extra`.
+- Mount syntax `mount -t type device mountpoint` type using `-t` might not be needed, mkfs will figure it out, but there might be confusion in FS that are similiar, so better do it i guess ?.
+- `mount -t ext4 /dev/sdf2 /home/extra`.
+- View mounted fs `mount`.
+- `sshfs server:/data ~/remote` because of FUSE (Filesystem in User Space), over ssh, can treat it as normal filesystem.
+- `ls ~/remote` now treat it like any other normal directory.
+- To unmount `umount /home/extra` or `umount /dev/sdf2`
+- For temprorary can use `/mnt` mount point`mount /dev/sdb1 /mnt`.
