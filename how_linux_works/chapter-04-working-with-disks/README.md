@@ -125,6 +125,7 @@ Useful when normal mounting fails.
 
 |Command|Description|
 |---|---|
+|`sudo mount`|List all mounts|
 |`mkfs.ext4 /dev/sdb1`|Create a new ext4 filesystem on `/dev/sdb1`. Existing data becomes inaccessible.|
 |`mkfs -t ext4 /dev/sdf2`|Create an ext4 filesystem using the generic `mkfs` command.|
 |`mount /dev/sdf2 /home/extra`|Mount `/dev/sdf2` at `/home/extra`.|
