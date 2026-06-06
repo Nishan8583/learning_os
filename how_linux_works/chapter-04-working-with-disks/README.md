@@ -359,3 +359,50 @@ Checked after root.
 |Test `/etc/fstab` changes|`sudo mount -a`|
 |Check mounted filesystems|`mount` or `df -h`|
 |Manually mount SSHFS|`mount /mnt/remote`|
+
+
+# Linux Swap Commands (Full Lifecycle Table)
+
+|Step|Command|Example|Output|Meaning / What Happens|
+|---|---|---|---|---|
+|**Check swap usage**|`free`|`free`|`Swap: 2097148 120000 1977148`|Shows total/used/free swap in KB|
+||`free -h`|`free -h`|`Swap: 2.0G 120M 1.8G`|Human-readable swap stats|
+|**View active swap**|`swapon --show`|`swapon --show`|`/swapfile file 2G 0B -2`|Lists all active swap devices/files|
+||`cat /proc/swaps`|`cat /proc/swaps`|swap table output|Kernel-provided swap information|
+|**Create swap file (step 1)**|`dd if=/dev/zero of=/swapfile bs=1M count=2048`|2GB file|(progress output from dd)|Creates a **raw empty file filled with zeros**|
+|**Initialize swap file (step 2)**|`mkswap /swapfile`|`mkswap /swapfile`|`Setting up swapspace... UUID=...`|Writes swap signature so Linux recognizes it as swap|
+|**Enable swap (step 3)**|`swapon /swapfile`|`swapon /swapfile`|(no output if success)|Activates swap space for kernel use|
+|**Create swap partition signature**|`mkswap /dev/sda5`|`mkswap /dev/sda5`|`Setting up swapspace...`|Marks a disk partition as swap|
+|**Enable swap partition**|`swapon /dev/sda5`|`swapon /dev/sda5`|(no output if success)|Kernel starts using partition as swap|
+|**Disable swap**|`swapoff /swapfile`|`swapoff /swapfile`|(no output if success)|Removes swap from kernel; pages moved back to RAM|
+|**Monitor swap activity**|`vmstat 1`|`vmstat 1`|`si so swpd ...`|Shows swap-in (si) and swap-out (so) activity|
+|**Live monitoring**|`top`|`top`|`MiB Swap: 2.0G 120M used`|Shows real-time swap usage|
+|**Enhanced monitor**|`htop`|`htop`|visual bars|Graphical view of RAM + swap|
+
+
+# 1. Example: Swap File Entry
+
+If you created:
+
+```
+/swapfile
+```
+
+Add this line to `/etc/fstab`:
+
+```
+/swapfile none swap sw 0 0
+```
+
+---
+
+## Meaning of Each Field
+
+|Field|Value|Meaning|
+|---|---|---|
+|1|`/swapfile`|Path to swap file|
+|2|`none`|No mount point (swap is not mounted like a filesystem)|
+|3|`swap`|Filesystem type is swap|
+|4|`sw`|Enable swap at boot|
+|5|`0`|Dump backup (unused for swap)|
+|6|`0`|fsck check order (not used for swap)|
