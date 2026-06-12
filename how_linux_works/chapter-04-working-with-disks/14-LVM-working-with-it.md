@@ -26,6 +26,8 @@ Example from the text:
     - `mylv1` (10 GB)
     - `mylv2` (10 GB)
 
+![alt](./images/05.png)
+
 This would be difficult using traditional partitioning alone.
 
 ---
@@ -564,6 +566,8 @@ Meaning:
 - `+100%FREE` → consume all free extents in the VG
 
 This is the preferred approach.
+
+![alt](./images/06.png)
 
 ---
 
