@@ -406,3 +406,26 @@ Add this line to `/etc/fstab`:
 |4|`sw`|Enable swap at boot|
 |5|`0`|Dump backup (unused for swap)|
 |6|`0`|fsck check order (not used for swap)|
+
+
+# LVM Commands
+| Step | Command Example                                   | Purpose                                                                                          |
+| ---- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| 1    | `parted /dev/sdb print`                           | Verify the partition on `/dev/sdb` is marked as an LVM partition.                                |
+| 2    | `parted /dev/sdc print`                           | Verify the partition on `/dev/sdc` is marked as an LVM partition.                                |
+| 3    | `vgcreate myvg /dev/sdb1`                         | Create a new Volume Group (`myvg`) and initialize `/dev/sdb1` as a Physical Volume if necessary. |
+| 4    | `vgs`                                             | Display a summary of all Volume Groups.                                                          |
+| 5    | `pvscan`                                          | Scan for Physical Volumes if the newly created VG is not automatically detected.                 |
+| 6    | `vgextend myvg /dev/sdc1`                         | Add `/dev/sdc1` to the existing Volume Group.                                                    |
+| 7    | `vgs`                                             | Verify the VG now contains two Physical Volumes.                                                 |
+| 8    | `lvcreate --size 10g --type linear -n mylv1 myvg` | Create the first 10 GB Logical Volume.                                                           |
+| 9    | `lvcreate --size 10g --type linear -n mylv2 myvg` | Create the second 10 GB Logical Volume.                                                          |
+| 10   | `lvs`                                             | Display a summary of all Logical Volumes.                                                        |
+| 11   | `vgdisplay myvg`                                  | Show detailed information about the Volume Group, including extents and free space.              |
+| 12   | `mkfs -t ext4 /dev/mapper/myvg-mylv1`             | Create an ext4 filesystem on the logical volume.                                                 |
+| 13   | `mount /dev/mapper/myvg-mylv1 /mnt`               | Mount the filesystem.                                                                            |
+| 14   | `df /mnt`                                         | Verify the mounted filesystem size and usage.                                                    |
+| 15   | `lvremove myvg/mylv2`                             | Remove the second Logical Volume.                                                                |
+| 16   | `lvresize -l +2602 myvg/mylv1`                    | Expand the Logical Volume using all free extents.                                                |
+| 17   | `fsadm -v resize /dev/mapper/myvg-mylv1`          | Resize the ext4 filesystem to occupy the larger Logical Volume.                                  |
+| 18   | `lvresize -r -l +100%FREE myvg/mylv1`             | Alternative one-command method that resizes both the LV and filesystem automatically.            |
