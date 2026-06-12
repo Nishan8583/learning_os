@@ -283,3 +283,141 @@ This separation is why you can:
 - Create snapshots and thin provisioning.
 
 The filesystem continues issuing reads and writes to the same logical block addresses while Device Mapper quietly translates them to wherever the data actually lives.
+
+
+----
+
+# Latency Discussion
+- The Device Mapper mapping tables live in kernel memory, not on disk.
+
+## How Does Device Mapper Store the Mappings?
+
+The mapping table is loaded once by LVM:
+
+```
+dmsetup table
+```
+
+Example:
+
+```
+0 20971520 linear 8:33 2048
+```
+
+The kernel doesn't scan PV headers on every read.
+
+Instead:
+
+```
+LVM metadata
+    ↓
+Loaded once
+    ↓
+In-memory mapping table
+    ↓
+Used for all reads/writes
+```
+
+So every I/O request is translated using an already-populated structure in kernel memory.
+
+## What About Very Complex LVM Layouts?
+
+For a simple linear volume:
+
+```
+LV
+ ↓
+Single PV
+```
+
+translation is basically:
+
+```
+physical_sector = logical_sector + offset;
+```
+
+which is almost free.
+
+For more complex configurations:
+
+```
+LV
+ ├─ PV1
+ ├─ PV2
+ ├─ PV3
+ └─ PV4
+```
+
+Device Mapper may need to determine which segment contains the requested block.
+
+Conceptually:
+
+```c
+find_segment(logical_sector);
+translate();
+```
+
+Even then, the cost remains tiny because the segment metadata is in memory.
+
+---
+
+## What Actually Hurts Performance?
+
+The mapping layer itself is rarely the bottleneck.
+
+Performance issues usually come from:
+
+### Striped volumes
+
+```
+LV
+ ├─ Disk A
+ └─ Disk B
+```
+
+A read may involve multiple devices.
+
+### Mirrored volumes
+
+```
+LV
+ ├─ Copy A
+ └─ Copy B
+```
+
+Extra synchronization work.
+
+### Thin provisioning
+
+Uses additional metadata structures and can add measurable overhead.
+
+### Snapshots
+
+Traditional LVM snapshots use copy-on-write.
+
+```
+Original LV
+     │
+Snapshot
+```
+
+Writes become more expensive because metadata must be maintained.
+
+---
+
+## Real-World Perspective
+
+Many enterprise systems run:
+
+- Databases
+- Virtual machines
+- Kubernetes nodes
+- Large storage arrays
+
+on top of LVM every day.
+
+If the translation cost were significant, LVM would not be so widely used.
+
+The reason it works well is that the Device Mapper is inside the kernel and performs very fast block-number translations before the request ever reaches the storage driver.
+
+A good analogy is virtual memory. Every memory access goes through virtual-to-physical address translation, yet modern systems are fast because the translation data is cached efficiently. Device Mapper applies a similar idea at the block-storage level.
