@@ -429,3 +429,20 @@ Add this line to `/etc/fstab`:
 | 16   | `lvresize -l +2602 myvg/mylv1`                    | Expand the Logical Volume using all free extents.                                                |
 | 17   | `fsadm -v resize /dev/mapper/myvg-mylv1`          | Resize the ext4 filesystem to occupy the larger Logical Volume.                                  |
 | 18   | `lvresize -r -l +100%FREE myvg/mylv1`             | Alternative one-command method that resizes both the LV and filesystem automatically.            |
+
+
+### Command Purpose
+
+|Command|Purpose|
+|---|---|
+|`ls -i`|Show inode numbers|
+
+For more detailed inode information:
+
+```
+stat
+```
+
+|Command|Purpose|
+|---|---|
+|`stat`|Show detailed inode metadata|
