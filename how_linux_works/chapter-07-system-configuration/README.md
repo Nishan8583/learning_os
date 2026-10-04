@@ -96,3 +96,41 @@ Key takeaways
 - Use dedicated account-management utilities instead of editing user and group files directly.
     
 - `getty`, `login`, and PAM participate in traditional terminal login and authentication.
+
+---
+
+
+# Time and Scheduled Jobs: Configuration Files and Commands
+
+## Configuration files
+
+| Filepath                                 | Example configuration                                                         | What the configuration indicates                                                                      |
+| ---------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `/etc/localtime`                         | Symbolic link to `/usr/share/zoneinfo/America/Vancouver`                      | Determines the system's local time zone. The file is typically binary time-zone data or a link to it. |
+| `/usr/share/zoneinfo/`                   | `America/Vancouver`                                                           | Contains time-zone definitions and aliases used to interpret local time.                              |
+| `/etc/systemd/timesyncd.conf`            | `[Time]` followed by server settings such as `NTP=...`                        | Configures systemd-timesyncd, including its network time servers.                                     |
+| `/etc/crontab`                           | `42 6 * * * root /usr/local/bin/cleansystem > /dev/null 2>&1`                 | Schedules a system-wide task to run as root at 6:42 AM every day.                                     |
+| `/etc/cron.d/`                           | `15 9 * * * root /usr/local/bin/cleanup`                                      | Holds additional system-wide cron configuration files, including an explicit execution user.          |
+| `/etc/cron.daily/`                       | A shell script such as `logrotate`                                            | Contains scripts commonly executed by a scheduled daily cron job.                                     |
+| `/var/spool/cron/crontabs/`              | `15 09 * * * /home/juser/bin/spmake`                                          | Typical storage location for individual user crontabs.                                                |
+| `/etc/systemd/system/loggertest.timer`   | `OnCalendar=*-*-* *:00,20,40`                                                 | Defines a timer that activates a service every 20 minutes.                                            |
+| `/etc/systemd/system/loggertest.service` | `Type=oneshot` and `ExecStart=/usr/bin/logger -p local3.debug "I'm a logger"` | Defines the command that the timer activates and specifies that it runs to completion.                |
+
+## Commands
+
+|Command|Example usage|Explanation|
+|---|---|---|
+|`date`|`date`|Displays the current date and time in the configured local time zone.|
+|`date +%s`|`date +%s`|Displays the current Unix timestamp in seconds.|
+|`hwclock`|`sudo hwclock --systohc --utc`|Copies the current system clock to the hardware RTC, interpreting it as UTC.|
+|`adjtimex`|`adjtimex`|Utility for inspecting or adjusting kernel clock parameters and timekeeping behavior.|
+|`tzselect`|`tzselect`|Helps identify an appropriate time zone.|
+|`ln`|`sudo ln -sf /usr/share/zoneinfo/America/Vancouver /etc/localtime`|Creates or replaces a symbolic link to set the local time-zone data file.|
+|`export`|`export TZ=US/Central`|Sets a time-zone environment variable for the current shell and its child processes.|
+|`TZ`|`TZ=US/Central date`|Runs a single command with a temporary time-zone override.|
+|`crontab`|`crontab myjobs`|Installs a file as the current user's crontab.|
+|`crontab -l`|`crontab -l`|Lists the current user's scheduled jobs.|
+|`crontab -e`|`crontab -e`|Edits the current user's crontab.|
+|`crontab -r`|`crontab -r`|Removes the current user's crontab.|
+|`journalctl`|`journalctl -f -u loggertest.service`|Follows journal messages associated with a specific service unit.|
+|`logger`|`logger -p local3.debug "I'm a logger"`|Sends a message to the system logging facility with the specified priority.|
