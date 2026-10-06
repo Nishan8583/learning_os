@@ -129,3 +129,74 @@
 |`echo +cpu +pids > cgroup.subtree_control`|Enable CPU and PIDs controllers for child cgroups|
 |`mkdir my-cgroup`|Create a cgroup directory|
 |`rmdir my-cgroup`|Remove an empty cgroup|
+
+
+## Htop Columns
+
+|Column|Meaning|
+|---|---|
+|**PID**|Process ID — unique identifier for the process|
+|**USER**|User who owns the process|
+|**PRI**|Kernel scheduling priority of the process|
+|**NI**|Nice value — user-space adjustment to scheduling priority|
+|**VIRT**|Total virtual memory/address space associated with the process|
+|**RES**|Resident memory — physical RAM currently resident for the process|
+|**SHR**|Shared resident memory — memory potentially shared with other processes|
+|**S**|Process state (`R` running, `S` sleeping, `D` uninterruptible sleep, `T` stopped, `Z` zombie, etc.)|
+|**CPU%**|Percentage of CPU capacity currently being consumed|
+|**MEM%**|Percentage of physical RAM used by the process|
+|**TIME+**|Total accumulated CPU time consumed by the process|
+|**Command**|Command/executable used to start the process|
+|**PPID**|Parent Process ID — PID of the process that created this process|
+|**PGRP**|Process Group ID|
+|**SID**|Session ID|
+|**TGID**|Thread Group ID — usually the PID of the main thread/process|
+|**TID**|Thread ID|
+|**NLWP**|Number of lightweight processes/threads belonging to the process|
+|**ELAPSED**|Time elapsed since the process started|
+|**STARTTIME**|Time/date when the process started|
+|**STATE**|More detailed process-state information|
+|**Processor**|CPU/core on which the process is currently executing|
+|**CPU Affinity**|CPUs on which the process is allowed to run|
+|**Command Line**|Full command line, including arguments|
+|**EXE**|Executable associated with the process|
+|**CWD**|Current working directory of the process|
+|**IO_R**|Bytes read by the process|
+|**IO_W**|Bytes written by the process|
+|**IO_RATE**|Current I/O rate|
+|**M_RESIDENT**|Resident memory|
+|**M_SHARE**|Shared memory|
+|**M_TRS**|Text/code resident memory|
+|**M_DRS**|Data resident memory|
+|**M_LRS**|Library resident memory|
+|**M_DT**|Dirty pages|
+|**SWAP**|Amount of the process's memory currently swapped out|
+|**M_SIZE**|Total process memory size|
+|**M_PSS**|Proportional Set Size — resident memory accounting that divides shared pages among processes using them|
+|**OOM**|Out-of-memory killer score/adjustment|
+|**OOMADJ**|Adjustment to the OOM-killer score|
+|**RCHAR**|Bytes read through system calls such as `read()`|
+|**WCHAR**|Bytes written through system calls such as `write()`|
+|**RBYTES**|Actual bytes read from storage|
+|**WBYTES**|Actual bytes written to storage|
+|**SYSCR**|Number of read-related system calls|
+|**SYSCW**|Number of write-related system calls|
+|**UTIME**|CPU time spent executing user-space code|
+|**STIME**|CPU time spent executing kernel/system code|
+
+### The ones I'd memorize for Linux/threat hunting
+
+```
+PID       → Who is the process?
+PPID      → Who spawned it?
+USER      → Who owns it?
+S         → What state is it in?
+CPU%      → Is it consuming CPU?
+MEM%      → How much RAM?
+VIRT      → How large is its virtual address space?
+RES       → How much RAM is resident?
+SHR       → How much resident memory is potentially shared?
+SWAP      → How much has been swapped?
+TIME+     → How much CPU time has it accumulated?
+Command   → What was executed?
+```
