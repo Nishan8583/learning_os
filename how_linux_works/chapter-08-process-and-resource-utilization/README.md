@@ -84,8 +84,8 @@
 |Memory|`free`|Free memory|
 |Memory|`buff`|Buffer memory|
 |Memory|`cache`|Cache memory|
-|Swap|`si`|Swap-in|
-|Swap|`so`|Swap-out|
+|Swap|`si`|Swap-in (Direction Swap → RAM)|
+|Swap|`so`|Swap-out (Direction RAM → Swap)|
 |I/O|`bi`|Blocks read|
 |I/O|`bo`|Blocks written|
 |System|`in`|Interrupts|
